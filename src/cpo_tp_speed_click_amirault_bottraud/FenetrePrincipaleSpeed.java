@@ -3,11 +3,16 @@ import cpo_tp_speed_click_amirault_bottraud.GrilleDeJeu;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.File;
+import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.Timer;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+
 
 /*
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
@@ -28,6 +33,12 @@ public class FenetrePrincipaleSpeed extends javax.swing.JFrame {
     /**
      * Creates new form FenetrePrincipaleSpeed
      */
+    // Musique commence
+    
+       MusicSound.RunMusic("Res/wii.wav");  
+    
+   
+   
     public FenetrePrincipaleSpeed(int taille, int limiteDeTemps) {
          int nbColonne = taille;
         int nbLigne = taille;
