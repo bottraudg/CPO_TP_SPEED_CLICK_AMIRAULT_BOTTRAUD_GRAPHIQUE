@@ -56,7 +56,7 @@ getContentPane().add(PanelGrille);
                 //txt_temps.setText(nbSecondes + "");
                 if(nbSecondes == limiteDeTemps){
                     setVisible(false);
-                    // Mettre une fenetre de fin en set visible true
+                    new FenetreVictoireSpeed().setVisible(true);
                     System.out.println(score);
                 }
             }
