@@ -1,7 +1,4 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
- */
+
 import cpo_tp_speed_click_amirault_bottraud.GrilleDeJeu;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
@@ -11,6 +8,11 @@ import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+
+/*
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+ * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
+ */
 /**
  *
  * @author guilenebottraud
@@ -23,12 +25,10 @@ public class FenetrePrincipaleSpeed extends javax.swing.JFrame {
     private Timer monChrono;
     private int limiteDeTemps;
     private int score;
-
     /**
      * Creates new form FenetrePrincipaleSpeed
      */
-    public FenetrePrincipaleSpeed(int taille, int limiteTemps) {
-        initComponents();
+    public FenetrePrincipaleSpeed(int taille, int limiteDeTemps) {
          int nbColonne = taille;
         int nbLigne = taille;
         this.limiteDeTemps = limiteDeTemps;
@@ -41,12 +41,13 @@ public class FenetrePrincipaleSpeed extends javax.swing.JFrame {
         for (int i = 0; i < this.grille.getNbLignes(); i++) {
             for (int j = 0; j < this.grille.getNbColonne(); j++) {
                 JButton button = new JButton(this.grille.getMatriceCellules()[i][j].toString());
-                //button.addActionListener(action);
+                button.addActionListener(action);
                 PanelGrille.add(button);
 
             }
+        }
 
-    }
+        
 getContentPane().add(PanelGrille);
         
         ActionListener tache_recurrente = new ActionListener() {
@@ -77,7 +78,7 @@ getContentPane().add(PanelGrille);
             int tailleXBouton;
             int tailleYBouton;
             JButton test = (JButton) e.getSource();
-            if(test.getText() != "X"){
+            if(test.getText() == "X"){
                 score += 100;
             } else {
                 score -= 70;
@@ -99,6 +100,8 @@ getContentPane().add(PanelGrille);
         }
 
     };
+
+   
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -174,7 +177,7 @@ getContentPane().add(PanelGrille);
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new FenetrePrincipaleSpeed(3,3).setVisible(true);
+                new FenetrePrincipaleSpeed(3, 10).setVisible(true);
             }
         });
     }

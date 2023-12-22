@@ -11,12 +11,23 @@ import java.util.Random;
  * @author guilenebottraud
  */
 public class GrilleDeJeu {
-
-    public GrilleDeJeu(int nbCellule, int nbCellule1) {
-    }
     private CelluleLumineuse[][] matriceCellules;
     private int nbLignes;
     private int nbColonne;
+
+    public GrilleDeJeu(int nbColonne, int nbLignes) {
+        this.nbColonne = nbColonne;
+        this.nbLignes = nbLignes;
+        matriceCellules = new CelluleLumineuse[nbLignes][nbColonne];// creation de la grille sous forme de tableau
+
+        // Initialisation de la grille avec des cellules éteintes
+        for (int i = 0; i < nbLignes; i++) {
+            for (int j = 0; j < nbColonne; j++) {
+                matriceCellules[i][j] = new CelluleLumineuse(false);
+            }
+        }
+    }
+    
     
     public void EteindreToutesLesCellules (){
         for (int i =0; i<nbLignes ; i++){
@@ -26,12 +37,19 @@ public class GrilleDeJeu {
         }
     }
     
-    public void ActiverUneCellule(){
-        for (int i=0; i<nbLignes ; i++){
-            for (int j=0; j<nbColonne; j++){
-                matriceCellules[i][j].activerCellule();
-            }
-        }
+    public int[] ActiverUneCellule(){
+        Random random = new Random();
+         // Générer des indices aléatoires pour la ligne et la colonne
+        int ligneAleatoire = random.nextInt(this.nbLignes);
+        //System.out.println(ligneAleatoire);
+        int colonneAleatoire = random.nextInt(this.nbColonne);
+
+        // Allumer la cellule aléatoire
+        matriceCellules[ligneAleatoire][colonneAleatoire].activerCellule();
+        int tab[] = new int[2];
+        tab[0] = ligneAleatoire;
+        tab[1] = colonneAleatoire;
+        return tab;
     }
     
     public void DesactiverUneCellule(){
@@ -41,6 +59,20 @@ public class GrilleDeJeu {
             }
         }
     }
+
+    public int getNbLignes() {
+        return nbLignes;
+    }
+
+    public int getNbColonne() {
+        return nbColonne;
+    }
+
+    public CelluleLumineuse[][] getMatriceCellules() {
+        return matriceCellules;
+    }
+    
+    
     
     
     /*public void melangerMatriceAleatoirement(int nbTours) {

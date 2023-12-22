@@ -1,31 +1,107 @@
 package cpo_tp_speed_click_amirault_bottraud;
+import cpo_tp_speed_click_amirault_bottraud.GrilleDeJeu;
+import java.awt.GridLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import javax.swing.Timer;
+import javax.swing.JButton;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
 
 /*
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
  */
-
 /**
  *
  * @author guilenebottraud
  */
 public class FenetrePrincipaleSpeed extends javax.swing.JFrame {
-
+    
+    public GrilleDeJeu grille;
+    private int taille;
+    private int nbSecondes;
+    private Timer monChrono;
+    private int limiteDeTemps;
+    private int score;
     /**
      * Creates new form FenetrePrincipaleSpeed
      */
-    public FenetrePrincipaleSpeed() {
-        initComponents();
-        
-        for (int i=5; i>=0; i--){
-           for (int j = 0; j< 7; j++){
-               CelluleGraphique cellulegraph = new CelluleGraphique();
-               jPanel1.add(cellulegraph);
-           } 
+    public FenetrePrincipaleSpeed(int taille, int limiteDeTemps) {
+         int nbColonne = taille;
+        int nbLigne = taille;
+        this.limiteDeTemps = limiteDeTemps;
+        this.score = 0;
+        this.taille = taille;
+        PanelGrille = new javax.swing.JPanel();
+        this.grille = new GrilleDeJeu(nbLigne, nbColonne);
+        grille.ActiverUneCellule();
+        PanelGrille.setLayout(new GridLayout(nbLigne, nbColonne));
+        for (int i = 0; i < this.grille.getNbLignes(); i++) {
+            for (int j = 0; j < this.grille.getNbColonne(); j++) {
+                JButton button = new JButton(this.grille.getMatriceCellules()[i][j].toString());
+                button.addActionListener(action);
+                PanelGrille.add(button);
+
+            }
         }
+
+        
+getContentPane().add(PanelGrille);
+        
+        ActionListener tache_recurrente = new ActionListener() {
+            public void actionPerformed(ActionEvent e1) {
+                nbSecondes++;
+                //txt_temps.setText(nbSecondes + "");
+                if(nbSecondes == limiteDeTemps){
+                    setVisible(false);
+                    // Mettre une fenetre de fin en set visible true
+                    System.out.println(score);
+                }
+            }
+        ;
+        };
+		/* instanciation du timer */
+	monChrono = new Timer(1000, tache_recurrente);
+        monChrono.start();
+        this.pack();
+        this.revalidate();
+
     }
     
-  
+    private ActionListener action = new ActionListener() {
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            grille.EteindreToutesLesCellules();
+            int tab[] = grille.ActiverUneCellule();
+            int tailleXBouton;
+            int tailleYBouton;
+            JButton test = (JButton) e.getSource();
+            if(test.getText() != "X"){
+                score += 100;
+            } else {
+                score -= 70;
+            }
+            tailleXBouton = test.getWidth();
+            tailleYBouton = test.getHeight();
+            
+            for (int i = 0; i < grille.getNbLignes(); i++) {
+                for (int j = 0; j < grille.getNbColonne(); j++) {
+                    
+                    test = (JButton) PanelGrille.getComponentAt(i*tailleXBouton, j*tailleYBouton);
+                    
+                    test.setText(grille.getMatriceCellules()[i][j].toString());
+                     
+                }
+            }
+            
+            
+        }
+
+    };// test 
+
+   
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -36,37 +112,25 @@ public class FenetrePrincipaleSpeed extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        jPanel1 = new javax.swing.JPanel();
+        PanelGrille = new javax.swing.JPanel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
-        jPanel1.setBackground(new java.awt.Color(247, 183, 177));
+        PanelGrille.setBackground(new java.awt.Color(247, 183, 177));
 
-        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
-        jPanel1.setLayout(jPanel1Layout);
-        jPanel1Layout.setHorizontalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 407, Short.MAX_VALUE)
+        javax.swing.GroupLayout PanelGrilleLayout = new javax.swing.GroupLayout(PanelGrille);
+        PanelGrille.setLayout(PanelGrilleLayout);
+        PanelGrilleLayout.setHorizontalGroup(
+            PanelGrilleLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 590, Short.MAX_VALUE)
         );
-        jPanel1Layout.setVerticalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 407, Short.MAX_VALUE)
+        PanelGrilleLayout.setVerticalGroup(
+            PanelGrilleLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 540, Short.MAX_VALUE)
         );
 
-        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
-        getContentPane().setLayout(layout);
-        layout.setHorizontalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 279, Short.MAX_VALUE))
-        );
-        layout.setVerticalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 38, Short.MAX_VALUE))
-        );
+        getContentPane().add(PanelGrille, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 590, 540));
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
@@ -101,12 +165,12 @@ public class FenetrePrincipaleSpeed extends javax.swing.JFrame {
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new FenetrePrincipaleSpeed().setVisible(true);
+                new FenetrePrincipaleSpeed(3, 100).setVisible(true);
             }
         });
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JPanel jPanel1;
+    private javax.swing.JPanel PanelGrille;
     // End of variables declaration//GEN-END:variables
 }
