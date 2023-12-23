@@ -5,7 +5,7 @@
 package cpo_tp_speed_click_amirault_bottraud;
 
 import java.awt.Color;
-import java.awt.Dimension;
+//import java.awt.Dimension;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -23,22 +23,25 @@ public class GrilleDeJeu extends JPanel {
     private int nbColonne;
     private int score;
     private boolean lancée = false;
-    private int mode = 0;
+    private int mode = 0;// niveaux 
     private int cellulesRestantes = 0;
 
+    /**
+     * Permet de creer une grille de jeu, une matrice 
+     * @param nbColonne
+     * @param nbLigne
+     */
     public GrilleDeJeu(int nbColonne, int nbLigne) {
         
         Reset(nbColonne, nbLigne);
     }
 
-    private void Reset(int nbc, int nbl)
-    {
+    private void Reset(int nbc, int nbl){ // on recreer la grille
         this.removeAll();
         this.nbColonne = nbc;
         this.nbLigne = nbl;
         matriceCellules = new CelluleLumineuse[nbLigne][nbColonne];// creation de la grille sous forme de tableau
         this.setLayout(new GridLayout(nbLigne, nbColonne));
-        // Initialisation de la grille avec des cellules éteintes
         for (int i = 0; i < nbLigne; i++) {
             for (int j = 0; j < nbColonne; j++) {
                 matriceCellules[i][j] = new CelluleLumineuse(i,j, mode);
@@ -53,37 +56,38 @@ public class GrilleDeJeu extends JPanel {
         repaint();
     }
 
+    /**
+     *
+     */
     public class onButtonClick implements ActionListener{
         private int i;
         private int j;
 
-        onButtonClick(int i, int j)
-        {
+        /**
+         * 
+         * @param i
+         * @param j
+         */
+        public onButtonClick(int i, int j){
             this.i = i;
             this.j = j;
         }
 
-        public void actionPerformed(ActionEvent e)
-        {
-            if (!lancée)
-            {
-                if (i == 0 && j <= 3)
-                {
+        public void actionPerformed(ActionEvent e){
+            if (!lancée){
+                if (i == 0 && j <= 3){
                     mode = j;
                     Start();
                 }
-            }
-            else
-            {
-                if (mode <= 1) //facile ou moyen
-                {
+            }else{
+                if (mode <= 1){ //niveux facile ou moyen 
                     if (matriceCellules[i][j].etat)
                     {
-                        score += 1;
+                        score += 100;
                     }
                     else
                     {
-                        score -= 1;
+                        score -= 70;
                     }
                     EteindreToutesLesCellules();
                     ActiverUneCellule();
@@ -93,17 +97,17 @@ public class GrilleDeJeu extends JPanel {
                     if (matriceCellules[i][j].etat)
                     {
                         matriceCellules[i][j].eteindreCellule();
-                        cellulesRestantes -= 1;
+                        cellulesRestantes -= 1;// permet de compter qu'il faut appuyer sur 2 cellules 
                         if (cellulesRestantes <= 0)
                         {
-                            score += 1;
+                            score += 100;
                             EteindreToutesLesCellules();
                             ActiverDeuxCellules();
                         }
                     }
                     else
                     {
-                        score -= 1;
+                        score -= 70;
                         EteindreToutesLesCellules();
                         ActiverDeuxCellules();
                     }
@@ -112,8 +116,10 @@ public class GrilleDeJeu extends JPanel {
         }
     }
 
-    public void Start()
-    {
+    /**
+     * Permet de lancer la partie, premiere grille avant que le joueur commence a jouer 
+     */
+    public void Start(){ 
         Reset(mode +3 , mode +3);
         score = 0;
         lancée = true;
@@ -131,21 +137,35 @@ public class GrilleDeJeu extends JPanel {
         }
     }
 
+    /**
+     * Arrete la partie a la fin du timer, re-affiche une matrice 3x3
+     */
     public void Stop()
     {
         Reset(3,3);
     }
 
-    public int GetScore()
+    /**
+     * Permet d'avoir le score (en haut à gauche)
+     * @return
+     */
+    public int GetScore() 
     {
         return score;
     }
 
+    /**
+     *Verifie si la partie est lancée ou non 
+     * @return
+     */
     public boolean IsStarted()
     {
         return lancée;
     }
     
+    /**
+     *Permet d'eteindre toutes les cellules
+     */
     public void EteindreToutesLesCellules (){
         for (int i =0; i<nbLigne ; i++){
             for (int j=0; j<nbColonne; j++){
@@ -154,6 +174,10 @@ public class GrilleDeJeu extends JPanel {
         }
     }
     
+    /**
+     * Permet d'activer une seule cellule
+     * @return
+     */
     public int[] ActiverUneCellule(){
         Random random = new Random();
          // Générer des indices aléatoires pour la ligne et la colonne
@@ -169,6 +193,9 @@ public class GrilleDeJeu extends JPanel {
         return tab;
     }
 
+    /**
+     * Permet d'activer deux cellules
+     */
     public void ActiverDeuxCellules(){
         Random random = new Random();
         int compteAllumées = 0;
@@ -184,6 +211,9 @@ public class GrilleDeJeu extends JPanel {
         cellulesRestantes = 2;
     }
     
+    /**
+     * Permet de désactiver une seule cellule
+     */
     public void DesactiverUneCellule(){
         for (int i=0; i<nbLigne ; i++){
             for (int j=0; j<nbColonne; j++){
@@ -192,27 +222,32 @@ public class GrilleDeJeu extends JPanel {
         }
     }
 
+    /**
+     * Permet d'avoir le nombre de lignes 
+     * @return
+     */
     public int getNbLignes() {
         return nbLigne;
     }
 
+    /**
+     * Permet d'avoir le nombre de colonnes
+     * @return
+     */
     public int getNbColonne() {
         return nbColonne;
     }
 
+    /**
+     * Permet d'avoir la grille
+     * @return
+     */
     public CelluleLumineuse[][] getMatriceCellules() {
         return matriceCellules;
     }
     
     
-    
-    
-    /*public void melangerMatriceAleatoirement(int nbTours) {
-        Random random = new Random();
-
-        for (int tour = 0; tour < nbTours; tour++) {
-            this.activerLigneColonneOuDiagonaleAleatoire();
-        }}*/
+   
   @Override
  
     public String toString() {

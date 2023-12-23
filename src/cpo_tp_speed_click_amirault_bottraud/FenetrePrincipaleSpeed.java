@@ -38,6 +38,7 @@ public class FenetrePrincipaleSpeed extends javax.swing.JFrame {
         this.score = 0;
         PanelGrille = new javax.swing.JPanel();
         PanelGrille.setLayout(new BoxLayout(PanelGrille, BoxLayout.Y_AXIS));
+       
 
         this.grille = new GrilleDeJeu(nbLigne, nbColonne);
 
@@ -50,6 +51,8 @@ public class FenetrePrincipaleSpeed extends javax.swing.JFrame {
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
+        
+        //layout.cr
         
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -121,20 +124,24 @@ public class FenetrePrincipaleSpeed extends javax.swing.JFrame {
         PanelGrille = new javax.swing.JPanel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setMinimumSize(new java.awt.Dimension(600, 500));
         getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+
+        PanelGrille.setFont(new java.awt.Font("Kefa", 0, 13)); // NOI18N
+        PanelGrille.setMinimumSize(new java.awt.Dimension(150, 150));
 
         javax.swing.GroupLayout PanelGrilleLayout = new javax.swing.GroupLayout(PanelGrille);
         PanelGrille.setLayout(PanelGrilleLayout);
         PanelGrilleLayout.setHorizontalGroup(
             PanelGrilleLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 0, Short.MAX_VALUE)
+            .addGap(0, 150, Short.MAX_VALUE)
         );
         PanelGrilleLayout.setVerticalGroup(
             PanelGrilleLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 260, Short.MAX_VALUE)
+            .addGap(0, 240, Short.MAX_VALUE)
         );
 
-        getContentPane().add(PanelGrille, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 10, -1, -1));
+        getContentPane().add(PanelGrille, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 10, 0, 240));
 
         pack();
     }// </editor-fold>//GEN-END:initComponents

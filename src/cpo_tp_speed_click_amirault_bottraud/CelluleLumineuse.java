@@ -23,6 +23,13 @@ public class CelluleLumineuse extends JButton {
     Color parDefaut = Color.WHITE;
 
     // constructeur (appelé depuis FenetrePrincipale)
+
+    /**
+     * permet de creer une des cellules
+     * @param i
+     * @param j
+     * @param mode
+     */
     public CelluleLumineuse(int i, int j, int mode) {
         //this.celluleLumineuseAssociee = celluleLumineuseAssociee;
         this.i = i;
@@ -33,10 +40,18 @@ public class CelluleLumineuse extends JButton {
     }
     // Methode gérant le dessin de la cellule @Override
 
+    /**
+     * savoit si la cellule est eteinte ou pas 
+     * @return
+     */
     public boolean estEteint(){
         return etat;
     }
 
+    /**
+     * permet de mettre 3 couleurs differente pour choisir les niveaux 
+     * @param g
+     */
     @Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
@@ -65,17 +80,27 @@ public class CelluleLumineuse extends JButton {
         g.fillOval(2, 2, w-4, h-4);
     }
 
+    /**
+     * gere la couleur 
+     * @param c
+     */
     public void Colorer(Color c)
     {
         parDefaut = c;
         repaint();
     }
     
+    /**
+     * allume une cellule
+     */
     public void activerCellule(){
         etat = true;
         repaint();
     }
 
+    /**
+     * eteint une cellule 
+     */
     public void eteindreCellule(){
         etat = false;
         repaint();
