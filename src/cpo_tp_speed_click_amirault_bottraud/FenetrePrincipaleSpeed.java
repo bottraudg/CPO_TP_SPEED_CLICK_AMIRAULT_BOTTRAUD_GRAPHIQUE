@@ -1,23 +1,17 @@
 package cpo_tp_speed_click_amirault_bottraud;
 import cpo_tp_speed_click_amirault_bottraud.GrilleDeJeu;
-import java.awt.GridLayout;
+
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.File;
-import java.io.IOException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.Timer;
-import javax.swing.JButton;
-import javax.swing.JFrame;
+import javax.swing.BoxLayout;
 import javax.swing.JLabel;
-import javax.swing.JPanel;
-
 
 /*
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
  */
+
 /**
  *
  * @author guilenebottraud
@@ -25,92 +19,93 @@ import javax.swing.JPanel;
 public class FenetrePrincipaleSpeed extends javax.swing.JFrame {
     
     public GrilleDeJeu grille;
-    private int taille;
     private int nbSecondes;
     private Timer monChrono;
     private int limiteDeTemps;
     private int score;
+    private JLabel scoreLabel;
+    private JLabel timerLabel;
+
     /**
      * Creates new form FenetrePrincipaleSpeed
      */
-    // Musique commence
-    
-       MusicSound.RunMusic("Res/wii.wav");  
-    
-   
-   
-    public FenetrePrincipaleSpeed(int taille, int limiteDeTemps) {
+    public FenetrePrincipaleSpeed(int taille, int limit) {
+        initComponents();
          int nbColonne = taille;
         int nbLigne = taille;
-        this.limiteDeTemps = limiteDeTemps;
+        nbSecondes = 0;
+        this.limiteDeTemps = limit;
         this.score = 0;
-        this.taille = taille;
         PanelGrille = new javax.swing.JPanel();
+        PanelGrille.setLayout(new BoxLayout(PanelGrille, BoxLayout.Y_AXIS));
+
         this.grille = new GrilleDeJeu(nbLigne, nbColonne);
-        grille.ActiverUneCellule();
-        PanelGrille.setLayout(new GridLayout(nbLigne, nbColonne));
-        for (int i = 0; i < this.grille.getNbLignes(); i++) {
-            for (int j = 0; j < this.grille.getNbColonne(); j++) {
-                JButton button = new JButton(this.grille.getMatriceCellules()[i][j].toString());
-                button.addActionListener(action);
-                PanelGrille.add(button);
 
-            }
-        }
-
+        scoreLabel = new javax.swing.JLabel();
+        timerLabel = new javax.swing.JLabel();
         
-getContentPane().add(PanelGrille);
+        PanelGrille.add(scoreLabel);
+        PanelGrille.add(timerLabel);
+        PanelGrille.add(grille);
+
+        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
+        getContentPane().setLayout(layout);
+        
+        layout.setHorizontalGroup(
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(PanelGrille)
+        );
+        layout.setVerticalGroup(
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(PanelGrille)
+        );
         
         ActionListener tache_recurrente = new ActionListener() {
             public void actionPerformed(ActionEvent e1) {
                 nbSecondes++;
-                //txt_temps.setText(nbSecondes + "");
-                if(nbSecondes == limiteDeTemps){
-                    setVisible(false);
-                    new FenetreVictoireSpeed().setVisible(true);
-                    System.out.println(score);
+                timerLabel.setText("Temps restant : " + (limiteDeTemps - nbSecondes) + "s");
+                if (nbSecondes >= limiteDeTemps)
+                {
+                    grille.Stop();
+                    monChrono.stop();
                 }
             }
-        ;
         };
+
+        ActionListener refresh = new ActionListener() {
+            public void actionPerformed(ActionEvent e1) {
+                RefreshScore();
+            }
+        };
+
 		/* instanciation du timer */
-	monChrono = new Timer(1000, tache_recurrente);
-        monChrono.start();
+	    monChrono = new Timer(1000, tache_recurrente);
+        var refreshChrono = new Timer(50, refresh);
+        refreshChrono.start();
+
         this.pack();
         this.revalidate();
-
     }
-    
-    private ActionListener action = new ActionListener() {
-        @Override
-        public void actionPerformed(ActionEvent e) {
-            grille.EteindreToutesLesCellules();
-            int tab[] = grille.ActiverUneCellule();
-            int tailleXBouton;
-            int tailleYBouton;
-            JButton test = (JButton) e.getSource();
-            if(test.getText() != "X"){
-                score += 100;
-            } else {
-                score -= 70;
-            }
-            tailleXBouton = test.getWidth();
-            tailleYBouton = test.getHeight();
-            
-            for (int i = 0; i < grille.getNbLignes(); i++) {
-                for (int j = 0; j < grille.getNbColonne(); j++) {
-                    
-                    test = (JButton) PanelGrille.getComponentAt(i*tailleXBouton, j*tailleYBouton);
-                    
-                    test.setText(grille.getMatriceCellules()[i][j].toString());
-                     
-                }
-            }
-            
-            
-        }
 
-    };// test 
+    public void RefreshScore()
+    {
+        if (grille.IsStarted())
+        {
+            if (!monChrono.isRunning())
+            {
+                nbSecondes = 0;
+                monChrono.start();
+            }
+            score = grille.GetScore();
+            scoreLabel.setText("Score : " + score);
+            repaint();
+        }
+        else
+        {
+            scoreLabel.setText("Score : " + score);
+            timerLabel.setText("Nouvelle partie? Cliquez sur VERT pour une partie facile, BLEU pour moyen, ROUGE pour dur...");
+        }
+    }
 
    
 
@@ -128,20 +123,18 @@ getContentPane().add(PanelGrille);
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
-        PanelGrille.setBackground(new java.awt.Color(247, 183, 177));
-
         javax.swing.GroupLayout PanelGrilleLayout = new javax.swing.GroupLayout(PanelGrille);
         PanelGrille.setLayout(PanelGrilleLayout);
         PanelGrilleLayout.setHorizontalGroup(
             PanelGrilleLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 590, Short.MAX_VALUE)
+            .addGap(0, 0, Short.MAX_VALUE)
         );
         PanelGrilleLayout.setVerticalGroup(
             PanelGrilleLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 540, Short.MAX_VALUE)
+            .addGap(0, 260, Short.MAX_VALUE)
         );
 
-        getContentPane().add(PanelGrille, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 590, 540));
+        getContentPane().add(PanelGrille, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 10, -1, -1));
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
@@ -176,7 +169,9 @@ getContentPane().add(PanelGrille);
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new FenetrePrincipaleSpeed(3, 100).setVisible(true);
+                var window =  new FenetrePrincipaleSpeed(3,10);
+                window.setSize(600,650);
+                window.setVisible(true);
             }
         });
     }

@@ -11,7 +11,7 @@ import java.util.concurrent.CountDownLatch;
  *
  * @author guilenebottraud
  */
-public class Partie {
+public class PartieSpeed {
  private GrilleDeJeu grille;
     int difficulte;// nb de coups 
     Scanner scanner;
@@ -19,7 +19,7 @@ public class Partie {
     int timer = 10; 
     boolean victoire;
 
-    public Partie() {
+    public PartieSpeed() {
         System.out.println("Bienvenue dans le jeu Speed Click!");
         scanner = new Scanner(System.in);
         while (difficulte == 0) {

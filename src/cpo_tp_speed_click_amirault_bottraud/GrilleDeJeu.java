@@ -4,33 +4,150 @@
  */
 package cpo_tp_speed_click_amirault_bottraud;
 
+import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.GridLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.Random;
+
+import javax.swing.JPanel;
 
 /**
  *
  * @author guilenebottraud
  */
-public class GrilleDeJeu {
+public class GrilleDeJeu extends JPanel {
     private CelluleLumineuse[][] matriceCellules;
-    private int nbLignes;
+    private int nbLigne;
     private int nbColonne;
+    private int score;
+    private boolean lancée = false;
+    private int mode = 0;
+    private int cellulesRestantes = 0;
 
-    public GrilleDeJeu(int nbColonne, int nbLignes) {
-        this.nbColonne = nbColonne;
-        this.nbLignes = nbLignes;
-        matriceCellules = new CelluleLumineuse[nbLignes][nbColonne];// creation de la grille sous forme de tableau
+    public GrilleDeJeu(int nbColonne, int nbLigne) {
+        
+        Reset(nbColonne, nbLigne);
+    }
 
+    private void Reset(int nbc, int nbl)
+    {
+        this.removeAll();
+        this.nbColonne = nbc;
+        this.nbLigne = nbl;
+        matriceCellules = new CelluleLumineuse[nbLigne][nbColonne];// creation de la grille sous forme de tableau
+        this.setLayout(new GridLayout(nbLigne, nbColonne));
         // Initialisation de la grille avec des cellules éteintes
-        for (int i = 0; i < nbLignes; i++) {
+        for (int i = 0; i < nbLigne; i++) {
             for (int j = 0; j < nbColonne; j++) {
-                matriceCellules[i][j] = new CelluleLumineuse(false);
+                matriceCellules[i][j] = new CelluleLumineuse(i,j, mode);
+                matriceCellules[i][j].addActionListener(new onButtonClick(i, j));
+                this.add(matriceCellules[i][j]);
+            }
+        }
+        matriceCellules[0][0].Colorer(Color.GREEN);
+        matriceCellules[0][1].Colorer(Color.BLUE);
+        matriceCellules[0][2].Colorer(Color.RED);
+        lancée = false;
+        repaint();
+    }
+
+    public class onButtonClick implements ActionListener{
+        private int i;
+        private int j;
+
+        onButtonClick(int i, int j)
+        {
+            this.i = i;
+            this.j = j;
+        }
+
+        public void actionPerformed(ActionEvent e)
+        {
+            if (!lancée)
+            {
+                if (i == 0 && j <= 3)
+                {
+                    mode = j;
+                    Start();
+                }
+            }
+            else
+            {
+                if (mode <= 1) //facile ou moyen
+                {
+                    if (matriceCellules[i][j].etat)
+                    {
+                        score += 1;
+                    }
+                    else
+                    {
+                        score -= 1;
+                    }
+                    EteindreToutesLesCellules();
+                    ActiverUneCellule();
+                }
+                else // dur
+                {
+                    if (matriceCellules[i][j].etat)
+                    {
+                        matriceCellules[i][j].eteindreCellule();
+                        cellulesRestantes -= 1;
+                        if (cellulesRestantes <= 0)
+                        {
+                            score += 1;
+                            EteindreToutesLesCellules();
+                            ActiverDeuxCellules();
+                        }
+                    }
+                    else
+                    {
+                        score -= 1;
+                        EteindreToutesLesCellules();
+                        ActiverDeuxCellules();
+                    }
+                }
             }
         }
     }
-    
+
+    public void Start()
+    {
+        Reset(mode +3 , mode +3);
+        score = 0;
+        lancée = true;
+        matriceCellules[0][0].Colorer(Color.WHITE);
+        matriceCellules[0][1].Colorer(Color.WHITE);
+        matriceCellules[0][2].Colorer(Color.WHITE);
+        EteindreToutesLesCellules();
+        if (mode <= 1)
+        {
+            ActiverUneCellule();
+        }
+        else
+        {
+            ActiverDeuxCellules();
+        }
+    }
+
+    public void Stop()
+    {
+        Reset(3,3);
+    }
+
+    public int GetScore()
+    {
+        return score;
+    }
+
+    public boolean IsStarted()
+    {
+        return lancée;
+    }
     
     public void EteindreToutesLesCellules (){
-        for (int i =0; i<nbLignes ; i++){
+        for (int i =0; i<nbLigne ; i++){
             for (int j=0; j<nbColonne; j++){
                 matriceCellules[i][j].eteindreCellule();
             }
@@ -40,7 +157,7 @@ public class GrilleDeJeu {
     public int[] ActiverUneCellule(){
         Random random = new Random();
          // Générer des indices aléatoires pour la ligne et la colonne
-        int ligneAleatoire = random.nextInt(this.nbLignes);
+        int ligneAleatoire = random.nextInt(this.nbLigne);
         //System.out.println(ligneAleatoire);
         int colonneAleatoire = random.nextInt(this.nbColonne);
 
@@ -51,9 +168,24 @@ public class GrilleDeJeu {
         tab[1] = colonneAleatoire;
         return tab;
     }
+
+    public void ActiverDeuxCellules(){
+        Random random = new Random();
+        int compteAllumées = 0;
+        while (compteAllumées < 2) {
+            int ligneAleatoire = random.nextInt(this.nbLigne);
+            int colonneAleatoire = random.nextInt(this.nbColonne);
+            if (!matriceCellules[ligneAleatoire][colonneAleatoire].etat)
+            {
+                matriceCellules[ligneAleatoire][colonneAleatoire].activerCellule();
+                compteAllumées++;
+            }
+        }
+        cellulesRestantes = 2;
+    }
     
     public void DesactiverUneCellule(){
-        for (int i=0; i<nbLignes ; i++){
+        for (int i=0; i<nbLigne ; i++){
             for (int j=0; j<nbColonne; j++){
                 matriceCellules[i][j].eteindreCellule();
             }
@@ -61,7 +193,7 @@ public class GrilleDeJeu {
     }
 
     public int getNbLignes() {
-        return nbLignes;
+        return nbLigne;
     }
 
     public int getNbColonne() {
@@ -85,25 +217,25 @@ public class GrilleDeJeu {
  
     public String toString() {
         String chaine = "   |";
-        for (int i=0;i<nbLignes;i++){
+        for (int i=0;i<nbLigne;i++){
                 chaine+= " "+i+" |";
         }
        
         chaine += "\n";
        
-        for (int i=0;i<nbLignes+1;i++){
+        for (int i=0;i<nbLigne+1;i++){
             chaine+= "----";
         }
        
         chaine += "\n";
            
-        for (int j=0;j<nbLignes;j++){
+        for (int j=0;j<nbLigne;j++){
             chaine+= " "+j+" |";
             for (int k=0;k<nbColonne;k++){
                 chaine+=" "+matriceCellules[j][k].toString()+" |";
             }
             chaine += "\n";
-            for (int i=0;i<nbLignes+1;i++){
+            for (int i=0;i<nbLigne+1;i++){
             chaine+= "----";
             }
             chaine += "\n";

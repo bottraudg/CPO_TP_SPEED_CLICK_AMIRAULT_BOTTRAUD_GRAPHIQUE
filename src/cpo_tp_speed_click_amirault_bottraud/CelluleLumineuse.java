@@ -3,64 +3,82 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
 package cpo_tp_speed_click_amirault_bottraud;
+import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.Graphics;
+import javax.swing.JButton;
 
 /**
  *
  * @author guilenebottraud
  */
-public class CelluleLumineuse {
-    private boolean etat;
-    public CelluleLumineuse(boolean par) {
-        etat = false;// initialisation à éteinte 
-    
+
+public class CelluleLumineuse extends JButton {
+
+    //CelluleLumineuse celluleLumineuseAssociee;
+    int i;
+    int j;
+    boolean etat;
+    int mode;
+    Color parDefaut = Color.WHITE;
+
+    // constructeur (appelé depuis FenetrePrincipale)
+    public CelluleLumineuse(int i, int j, int mode) {
+        //this.celluleLumineuseAssociee = celluleLumineuseAssociee;
+        this.i = i;
+        this.j = j;
+        this.mode = mode;
+        etat = false;
+        repaint();
+    }
+    // Methode gérant le dessin de la cellule @Override
+
+    public boolean estEteint(){
+        return etat;
     }
 
-    /**
-     * Permet d'activer la cellule c'est à dire changer son état initial
-     */
-    public void activerCellule(){ 
-        etat= !etat;
+    @Override
+    protected void paintComponent(Graphics g) {
+        super.paintComponent(g);
+        int w=this.getWidth();
+        int h=this.getHeight();
+    
+        if (etat)
+        {
+            if (mode == 0)
+            {
+                g.setColor(Color.GREEN);  
+            }
+            else if (mode == 1)
+            {
+                g.setColor(Color.BLUE);
+            }
+            else
+            {
+                g.setColor(Color.RED);
+            }
+        }
+        else
+        {
+            g.setColor(parDefaut); 
+        }
+        g.fillOval(2, 2, w-4, h-4);
+    }
+
+    public void Colorer(Color c)
+    {
+        parDefaut = c;
+        repaint();
     }
     
-    /**
-     * Permet d'eteindre la cellule
-     */
+    public void activerCellule(){
+        etat = true;
+        repaint();
+    }
+
     public void eteindreCellule(){
         etat = false;
-    }
-    
-    /**
-     * Permet de verifier l'etat de la cellule, ici voir si elle est eteinte 
-     * @return
-     */
-    public boolean estEteint(){
-    return !etat;
-    }
-    
-    
-   
-
-    /**
-     * Permet simplement de verifier l'etat de la cellule, ce qui nous donnera soit activée soit eteinte
-     * @return
-     */
-    public boolean getEtat(){
-        return etat;
-        
-    }
-    
-    /**
-     * Permet d'avoir des X et O dans les cellules et non les references objets ce qui rend la lecture plus simple 
-     * @return
-     */
-    @Override
-    public String toString () {    // méthode string 
-        
-        if (etat){
-            return "0";
-        }else{
-            return "X";
-        }//
+        repaint();
     }
 
 }
